@@ -3,6 +3,7 @@ import SignIn from './pages/SignIn';
 import './App.css';
 import SignUp from './pages/SignUp';
 import MainPage from './pages/MainPage';
+import NewPost from './pages/NewPost';
 
 import {
   BrowserRouter as Router,
@@ -19,6 +20,12 @@ function App() {
           <Route path="/myorders">
             {/* LUGAR DONDE APARECEN LOS ORDENES */}
           </Route>
+          <Route path="/createnewpost">
+            <NewPost />
+          </Route>
+          <Route path="/myprofile">
+            {/*APARECE LA PARTE DE MI PERFIL*/}
+            </Route>
           <Route path="/mainpage">
             <MainPage />
           </Route>

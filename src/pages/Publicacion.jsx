@@ -18,6 +18,15 @@ const useStyles = makeStyles({
   },
   image : {
     height:250
+  },
+  underCardColor : {
+    backgroundColor: '#CDF1AF',
+  },
+  underCardColor2 : {
+    backgroundColor: '#FFD3D4',
+  },
+  underCardButton: {
+    backgroundColor: '#fffff',
   }
 });
 
@@ -35,8 +44,8 @@ export default function ImgMediaCard(params) {
           image="https://pluspng.com/img-png/my-little-pony-png-download-my-little-pony-png-images-transparent-gallery-advertisement-1834.png"
           title="PonyProducto"
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+        <CardContent className={classes.underCardColor}>
+          <Typography gutterBottom variant="h5" component="h2" >
             Perfume pony
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
@@ -44,8 +53,8 @@ export default function ImgMediaCard(params) {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary">
+      <CardActions className={classes.underCardColor2}>
+        <Button size="small" color="secondary" className={classes.underCardButton}>
           Comprar
         </Button>
       </CardActions>

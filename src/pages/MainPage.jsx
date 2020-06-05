@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     flexWrap: 'wrap',
+    backgroundColor: '#87DCC0',
   },
   toolbarTitle: {
     flexGrow: 1,
@@ -77,7 +78,7 @@ export default function MainPage() {
           </Typography>
           
           <nav>
-          <Button href="#" color="primary" variant="outlined" className={classes.link}>
+          <Button href="createnewpost" color="primary" variant="outlined" className={classes.link}>
             Crear nueva publicacion
           </Button>
           <Link variant="button" color="textPrimary" href="#" className={classes.link}>
@@ -85,7 +86,7 @@ export default function MainPage() {
             </Link>
             <label className={classes.spacedwidth}/>
             <Link variant="button" color="textPrimary" href="#" className={classes.link}>
-              Mis ordenes primorosas
+              Mis ordenes
             </Link> 
           </nav>
         </Toolbar>
