@@ -80,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainPage() {
   const classes = useStyles();
+  
 
   return (
     <React.Fragment>
