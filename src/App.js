@@ -6,7 +6,7 @@ import MainPage from './pages/MainPage';
 import NewPost from './pages/NewPost';
 import MyOrders from './pages/MyOrders';
 import MyProfile from './pages/MyProfile';
-
+import { Provider } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,8 +14,10 @@ import {
   Redirect,
 }from 'react-router-dom';
 
-function App() {
+function App(props) {
+  const { store } = props;
   return (
+    <Provider store={store}>
     <Router>
       <div>
         <Switch>
@@ -43,6 +45,7 @@ function App() {
         </Switch>
       </div>
     </Router>
+    </Provider>
   );
 }
 
