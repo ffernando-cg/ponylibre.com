@@ -10,17 +10,14 @@ import {
 } from '../constants/actionTypes';
 import apiCall from '../api';
 
-function* searchMovie(action) {
+function* searchProduct(action) {
   try {
     const result = yield call(apiCall, 'GET', '/v1/products', null);
     console.log(result);
-    if (result.data.Error) {
-      throw new Error(result.data.Error);
-    }
 
     yield put({
       type: SEARCH_PRODUCTS_COMPLETE,
-      payload: result.data.Search
+      payload: result.data
     });
   } catch (e) {
     yield put({
@@ -31,5 +28,5 @@ function* searchMovie(action) {
 }
 
 export default function* () {
-  yield takeLatest(SEARCH_PRODUCTS_START, searchMovie);
+  yield takeLatest(SEARCH_PRODUCTS_START, searchProduct);
 }

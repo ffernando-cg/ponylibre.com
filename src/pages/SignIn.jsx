@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,7 +10,12 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Alert from '@material-ui/lab/Alert'
+import { useDispatch, useSelector } from 'react-redux';
+import { resetProductSearch } from '../actions/searchProducts'
+import { searchUserByEmail } from '../actions/loginUser'
+import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,12 +46,55 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     backgroundColor: '#30B2BA',
-    color:'#ffffff'
+    color: '#ffffff'
   },
 }));
 
-export default function SignInSide() {
+export default function SignInSide(props) {
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const loading = useSelector((state) => _.get(state, "searchProducts.loading"));
+  const results = useSelector((state) => _.get(state, "searchProducts.results"));
+  const error = useSelector((state) => _.get(state, "searchProducts.error"));
+
+  const [count, setCount] = useState(0)
+
+  const renderPublicaciones = () => {
+    if (results && results.length >= 1) {
+      console.log(results);
+      dispatch(resetProductSearch());
+      props.history.push(`/mainpage`);
+    } else if (loading) {
+      return <CircularProgress size={90} color="primary" />;
+    } else if (error) {
+      return (
+        <Alert severity="error">
+          Oops, something terrible has happened! :(
+        </Alert>
+      );
+    }
+    return <div>Programador chafa</div>
+  };
+
+  useEffect(() => {
+    //this.setState({ userEmail: '' });
+
+    console.log(count)
+  });
+
+
+  const _handleTitleChange = (event) => {
+    this.setState({ userEmail: event.target.value });
+  }
+
+  const handleLogin = () => {
+    const { userEmail } = this.getState();
+
+    if (!loading && !results && !error) {
+      dispatch(searchUserByEmail(userEmail));
+    }
+    renderPublicaciones();
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -88,7 +136,8 @@ export default function SignInSide() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              href='./mainpage'
+              href="./mainPage"
+              onClick={() => handleLogin()}
             >
               Inicia sesión
             </Button>
@@ -101,9 +150,9 @@ export default function SignInSide() {
               </Grid>
             </Grid>
             <Box mt={5}>
-            <Typography variant="body2" color="textSecondary" align="center">
-              {'Copyright © ponylibre.com 2020'}
-            </Typography>
+              <Typography variant="body2" color="textSecondary" align="center">
+                {'Copyright © ponylibre.com 2020'}
+              </Typography>
             </Box>
           </form>
         </div>

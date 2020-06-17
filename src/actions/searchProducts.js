@@ -3,11 +3,11 @@ import {
   SEARCH_PRODUCTS_RESET
 } from '../constants/actionTypes';
 
-export const resetMovieSearch = () => ({
+export const resetProductSearch = () => ({
   type: SEARCH_PRODUCTS_RESET
 });
 
-export const searchMovie = payload => ({
+export const searchProduct = payload => ({
   type: SEARCH_PRODUCTS_START,
   payload
 });

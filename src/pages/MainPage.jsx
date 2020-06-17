@@ -5,15 +5,14 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import Publicaciones from "./Publicacion";
-
+import Products from "./Product";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from '@material-ui/lab/Alert'
 import _ from "lodash";
-import { searchMovie } from "../actions/searchProducts";
+import { searchProduct } from "../actions/searchProducts";
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -90,21 +89,22 @@ export default function MainPage() {
 
   const dispatch = useDispatch();
 
-  const loading = useSelector((state) => _.get(state, "product.loading"));
-  const results = useSelector((state) => _.get(state, "product.results"));
-  const error = useSelector((state) => _.get(state, "product.error"));
+  const loading = useSelector((state) => _.get(state, "searchProducts.loading"));
+  const results = useSelector((state) => _.get(state, "searchProducts.results"));
+  const error = useSelector((state) => _.get(state, "searchProducts.error"));
 
   useEffect(() => {
-
+    debugger
     if (!loading && !results && !error) {
-      dispatch(searchMovie());
+      dispatch(searchProduct());
     }
   });
 
   const renderPublicaciones = () => {
     if (results && results.length >= 1) {
+      console.log(results);
       return (results.map((index) => (
-        <Publicaciones Key={index} />
+        <Products Key={index} />
       )));
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
@@ -115,6 +115,7 @@ export default function MainPage() {
         </Alert>
       );
     }
+    return <div>Programador de Mierda</div>
   };
 
   return (
@@ -160,6 +161,10 @@ export default function MainPage() {
             >
               Mis ordenes
             </Button>
+            <TextField
+              className={classes.textFieldSearch}
+              placeholder="Buscar producto"
+            />
           </nav>
         </Toolbar>
       </AppBar>
