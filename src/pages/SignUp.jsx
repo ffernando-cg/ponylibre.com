@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,7 +9,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { useHistory } from "react-router-dom";
+import { resetProductSearch } from "../actions/searchProducts";
+import { createUser, resetCreateUser } from "../actions/createUser";
+import { setLocalStorage, getLocalStorage } from "../actions/localStorage";
+import Alert from "@material-ui/lab/Alert";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +46,76 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => _.get(state, "createUser.loading"));
+  const results = useSelector((state) => _.get(state, "createUser.results"));
+  const error = useSelector((state) => _.get(state, "createUser.error"));
+  const [credentials, setCredentials] = useState({
+    userEmail: "",
+    userPassword: "",
+  });
+  const history = useHistory();
+
+
+  useEffect(() => {
+    if (getLocalStorage('ponys-username')) {
+      history.push("/mainpage");
+    }
+  });
+
+  const renderPublicaciones = () => {
+    if (results) {
+      console.log(results);
+      if (
+        results.correo == credentials.userEmail &&
+        results.password == credentials.userPassword
+      ) {
+        dispatch(resetProductSearch());
+        setLocalStorage(results, "ponys-username");
+        history.push("/mainpage");
+      } else {
+        return (
+          <Alert severity="error">Usuario o Contraseña Incorrectos :(</Alert>
+        );
+      }
+    } else if (error) {
+      return (
+        <Alert severity="error">
+          Oops, something terrible has happened! :(
+        </Alert>
+      );
+    }
+    return <Alert severity="error">
+        Oops, something terrible has happened! :(
+      </Alert>;
+  };
+
+  function _handleLogin(event) {
+  debugger
+
+    if (credentials.userEmail && credentials.userPassword && !loading && !results && !error) {
+      dispatch(createUser(credentials));
+    }
+
+    renderPublicaciones();
+  }
+
+
+  function _handleEmailChange(event) {
+    //dispatch(createUser());
+
+    setCredentials({
+      userEmail: event.target.value,
+      userPassword: credentials.userPassword,
+    });
+  }
+
+  function _handlePasswordChange(event) {
+    setCredentials({
+      userEmail: credentials.userEmail,
+      userPassword: event.target.value,
+    });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -55,22 +131,14 @@ export default function SignUp() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                name="ponyname"
-                variant="outlined"
-                required
-                fullWidth
-                id="ponyname"
-                label="Nombre Pony"
-              />{/* SI QUIEREN QUE LA CONTRASEÑA SE MANDE COMO PARAMETRO EN EL URL USEN ESTO : name="ponyname" */}
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
                 variant="outlined"
                 required
                 fullWidth
                 id="username"
-                label="Nombre de usuario"
-              />{/* SI QUIEREN QUE LA CONTRASEÑA SE MANDE COMO PARAMETRO EN EL URL USEN ESTO : name="username" */}
+                label="Email"
+                defaultValue={credentials.userEmail}
+                onChange={(e) => _handleEmailChange(e)}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -80,15 +148,17 @@ export default function SignUp() {
                 label="Contraseña"
                 type="password"
                 id="password"
-              />{/* SI QUIEREN QUE LA CONTRASEÑA SE MANDE COMO PARAMETRO EN EL URL USEN ESTO : name="password" */}
+                defaultValue={credentials.userPassword}
+                onChange={(e) => _handlePasswordChange(e)}
+              />
             </Grid>
             
           </Grid>
           <Button
             fullWidth
-            variant="outlined"
+            variant="contained"
             className={classes.submit}
-            onClick={/* AQUI ES DONDE DEBE DE HACER LA FUNCION O LLAMAR A LA FUNCION PARA CREAR UN USUARIO  */ console.log("Registrado")}
+            onClick={() => _handleLogin()}
           >
             Registrarme
           </Button>

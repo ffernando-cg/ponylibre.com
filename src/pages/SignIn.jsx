@@ -108,7 +108,9 @@ export default function SignInSide(props) {
         </Alert>
       );
     }
-    return <div>Programador chafa</div>;
+    return <Alert severity="error">
+        Oops, something terrible has happened! :(
+      </Alert>;
   };
 
   function _handleLogin(event) {
@@ -129,7 +131,6 @@ export default function SignInSide(props) {
       userEmail: credentials.userEmail,
       userPassword: event.target.value,
     });
-    console.log(credentials);
   }
 
   return (

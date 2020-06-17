@@ -3,6 +3,7 @@ import searchProducts from './searchProducts';
 import searchMovieById from './searchMovieById';
 import searchUserOrders from './searchUserOrders';
 import loginUser from './loginUser';
+import creaetUser from './createUser'
 
 
 export default function* () {
@@ -10,6 +11,7 @@ export default function* () {
     searchProducts(),
     searchMovieById(),
     searchUserOrders(),
-    loginUser()
+    loginUser(),
+    creaetUser()
   ]);
 }
