@@ -7,6 +7,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Products from "./Product";
+import Publications from "./Publicacion";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from '@material-ui/lab/Alert'
@@ -94,7 +95,6 @@ export default function MainPage() {
   const error = useSelector((state) => _.get(state, "searchProducts.error"));
 
   useEffect(() => {
-    debugger
     if (!loading && !results && !error) {
       dispatch(searchProduct());
     }
@@ -103,8 +103,9 @@ export default function MainPage() {
   const renderPublicaciones = () => {
     if (results && results.length >= 1) {
       console.log(results);
-      return (results.map((index) => (
-        <Products Key={index} />
+      return (results.map((p, index) => (
+        <Publications Key={index} {...p}/>
+        //<Products Key={index} />
       )));
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
