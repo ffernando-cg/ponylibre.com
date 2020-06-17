@@ -14,6 +14,8 @@ import Alert from '@material-ui/lab/Alert'
 import _ from "lodash";
 import { searchProduct } from "../actions/searchProducts";
 import TextField from '@material-ui/core/TextField';
+import { getLocalStorage } from '../actions/localStorage';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -93,8 +95,12 @@ export default function MainPage() {
   const loading = useSelector((state) => _.get(state, "searchProducts.loading"));
   const results = useSelector((state) => _.get(state, "searchProducts.results"));
   const error = useSelector((state) => _.get(state, "searchProducts.error"));
-
+  const history = useHistory();
+  
   useEffect(() => {
+    if (!getLocalStorage('ponys-username')) {
+      history.push("/login");
+    }
     if (!loading && !results && !error) {
       dispatch(searchProduct());
     }
@@ -103,8 +109,8 @@ export default function MainPage() {
   const renderPublicaciones = () => {
     if (results && results.length >= 1) {
       console.log(results);
-      return (results.map((p, index) => (
-        <Publications Key={index} {...p} />
+      return (results.map((p) => (
+        <Publications Key={p.id} {...p} />
       )));
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
