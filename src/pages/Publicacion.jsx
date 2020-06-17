@@ -14,7 +14,7 @@ import Fade from '@material-ui/core/Fade';
 import { Grid, Divider } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-const useStyles = makeStyles((theme)=>({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
     marginTop: 25,
@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme)=>({
     marginRight: "1rem",
     alignItems: 'center'
   },
-  image : {
-    height:250
+  image: {
+    height: 250
   },
-  underCardColor : {
+  underCardColor: {
     backgroundColor: '#CDF1AF',
   },
-  underCardColor2 : {
+  underCardColor2: {
     backgroundColor: '#FFD3D4',
   },
   underCardButton: {
@@ -45,22 +45,22 @@ const useStyles = makeStyles((theme)=>({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(10, 15, 10),
   },
-  image2 : {
-    height:450
+  image2: {
+    height: 450
   },
-  btnRight:{
+  btnRight: {
     color: '#696969',
     backgroundColor: '#F0F0F0',
     alignItems: 'right',
     marginLeft: 280
   },
-  divisor:{
+  divisor: {
     marginTop: 20,
     marginBottom: 20
   },
   btnColorGreen: {
     color: "#3CB371",
-    
+
     "&:hover": {
       background: "#3CB371",
       color: "#FFFFFF"
@@ -93,27 +93,27 @@ export default function ImgMediaCard(props) {
   //return this.products.map(p => (
   return (
     <div>
-    <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.image}
-          component="img"
-          alt="Producto"
-          image={img}
-          title="PonyProducto"
-          onClick={handleOpen}
-        />
-        <CardContent className={classes.underCardColor}>
-          <Typography gutterBottom variant="h5" component="h2" >
-            {name}
+      <Card className={classes.root}>
+        <CardActionArea>
+          <CardMedia
+            className={classes.image}
+            component="img"
+            alt="Producto"
+            image={img}
+            title="PonyProducto"
+            onClick={handleOpen}
+          />
+          <CardContent className={classes.underCardColor}>
+            <Typography gutterBottom variant="h5" component="h2" >
+              {name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {price} ponydolars
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {price} ponydolars
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-    <Modal
+          </CardContent>
+        </CardActionArea>
+      </Card>
+      <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
@@ -128,31 +128,31 @@ export default function ImgMediaCard(props) {
         <Fade in={open}>
           <div className={classes.paper}>
             <Grid container spacing={3}>
-            <Grid item md={5}>
-            <img src={img} className={classes.image2}/>
-            </Grid>
-            <Grid item md={3} />
-            <Grid item md={4}>
-              <Button className={classes.btnRight} onClick={handleClose}>
-                <CloseIcon />
+              <Grid item md={5}>
+                <img src={img} className={classes.image2} />
+              </Grid>
+              <Grid item md={3} />
+              <Grid item md={4}>
+                <Button className={classes.btnRight} onClick={handleClose}>
+                  <CloseIcon />
+                </Button>
+                <Typography gutterBottom variant="h3" component="h2" >
+                  {name}
+                </Typography>
+                <Typography variant="h6" color="textSecondary" component="h6">
+                  {price} ponydolars
+            </Typography>
+                <Typography variant="h6" color="textSecondary" component="h6">
+                  {description}
+                </Typography>
+                <Typography variant="h6" color="textSecondary" component="h6">
+                  Texto por si le quieren añadir
+            </Typography>
+                <Divider className={classes.divisor} />
+                <Button variant="outlined" size="large" className={classes.btnColorGreen}>
+                  COMPRAR
               </Button>
-            <Typography gutterBottom variant="h3" component="h2" >
-            {name}
-            </Typography>
-            <Typography variant="h6" color="textSecondary" component="h6">
-            {price} ponydolars
-            </Typography>
-            <Typography variant="h6" color="textSecondary" component="h6">
-            {description}
-            </Typography>
-            <Typography variant="h6" color="textSecondary" component="h6">
-              Texto por si le quieren añadir
-            </Typography>
-            <Divider  className={classes.divisor}/>
-            <Button variant="outlined" size="large" className={classes.btnColorGreen}>
-              COMPRAR
-              </Button>
-            </Grid>
+              </Grid>
             </Grid>
           </div>
         </Fade>

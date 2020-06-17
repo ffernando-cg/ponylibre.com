@@ -12,15 +12,15 @@ import {
 import apiCall from '../api';
 
 function* loginUser(action) {
-  const { userEmail } = action.payload;
+  console.log(action.payload);
+  const userEmail = action.payload;
 
   try {
-    const result = yield call(apiCall, 'GET', `v1/users/${userEmail}`, null);
+    const result = yield call(apiCall, 'GET', `/v1/users/${userEmail}`, null);
 
     if (result.data.Error) {
       throw new Error(result.data.Error);
     }
-
     yield put({
       type: SEARCH_USER_BY_ID_COMPLETE,
       payload: result.data

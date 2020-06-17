@@ -104,8 +104,7 @@ export default function MainPage() {
     if (results && results.length >= 1) {
       console.log(results);
       return (results.map((p, index) => (
-        <Publications Key={index} {...p}/>
-        //<Products Key={index} />
+        <Publications Key={index} {...p} />
       )));
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;

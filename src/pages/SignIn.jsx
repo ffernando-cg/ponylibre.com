@@ -10,11 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from '@material-ui/lab/Alert'
 import { useDispatch, useSelector } from 'react-redux';
 import { resetProductSearch } from '../actions/searchProducts'
-import { searchUserByEmail } from '../actions/loginUser'
+import { searchUserByEmail, resetSearchUserByEmail, resetErrorSearchUserByEmail } from '../actions/loginUser'
 import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,19 +52,17 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const loading = useSelector((state) => _.get(state, "searchProducts.loading"));
-  const results = useSelector((state) => _.get(state, "searchProducts.results"));
-  const error = useSelector((state) => _.get(state, "searchProducts.error"));
-
-  const [count, setCount] = useState(0)
+  const loading = useSelector((state) => _.get(state, "login.loading"));
+  const results = useSelector((state) => _.get(state, "login.results"));
+  const error = useSelector((state) => _.get(state, "login.error"));
+  const [credentials, setCredentials] = useState({ userEmail: '', userPassword: '' })
 
   const renderPublicaciones = () => {
-    if (results && results.length >= 1) {
-      console.log(results);
-      dispatch(resetProductSearch());
-      props.history.push(`/mainpage`);
-    } else if (loading) {
-      return <CircularProgress size={90} color="primary" />;
+
+    if (results) {
+      console.log('PUTO', results);
+      //dispatch(resetProductSearch());
+      //props.history.push(`/mainpage`);
     } else if (error) {
       return (
         <Alert severity="error">
@@ -77,24 +74,29 @@ export default function SignInSide(props) {
   };
 
   useEffect(() => {
-    //this.setState({ userEmail: '' });
+    const { userEmail } = credentials;
 
-    console.log(count)
-  });
-
-
-  const _handleTitleChange = (event) => {
-    this.setState({ userEmail: event.target.value });
-  }
-
-  const handleLogin = () => {
-    const { userEmail } = this.getState();
-
-    if (!loading && !results && !error) {
+    if (userEmail && !loading && !results && !error) {
       dispatch(searchUserByEmail(userEmail));
+
+    } else if (error) {
+      dispatch(resetErrorSearchUserByEmail());
     }
+  })
+
+  async function _handleLogin(event) {
     renderPublicaciones();
   };
+
+  function _handleEmailChange(event) {
+    setCredentials({ userEmail: event.target.value, userPassword: credentials.userPassword })
+  }
+
+  function _handlePasswordChange(event) {
+    setCredentials({ userEmail: credentials.userEmail, userPassword: event.target.value })
+    console.log(credentials);
+  }
+
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -115,8 +117,10 @@ export default function SignInSide(props) {
               required
               fullWidth
               id="username"
-              label="Nombre de usuario"
+              label="Email"
               name="username"
+              defaultValue={credentials.userEmail}
+              onChange={(e) => _handleEmailChange(e)}
               autoFocus
             />
             <TextField
@@ -129,15 +133,16 @@ export default function SignInSide(props) {
               type="password"
               id="password"
               autoComplete="current-password"
+              defaultValue={credentials.userPassword}
+              onChange={(e) => _handlePasswordChange(e)}
             />
             <Button
-              type="submit"
+              //type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              href="./mainPage"
-              onClick={() => handleLogin()}
+              onClick={() => _handleLogin()}
             >
               Inicia sesión
             </Button>
