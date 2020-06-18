@@ -21,6 +21,17 @@ import FormControl from '@material-ui/core/FormControl';
 import FilledInput from '@material-ui/core/FilledInput';
 import Alert from "@material-ui/lab/Alert";
 import { createProduct, resetCreateProduct } from "../actions/createProduct";
+import { resetProductSearch } from "../actions/searchProducts";
+import S3FileUpload from 'react-s3';
+
+//Optional Import
+
+const config = {
+  bucketName: 'ponylibre',
+  region: 'us-west-1',
+  accessKeyId: 'AKIAIIGRIIBL42XGQVPQ',
+  secretAccessKey: '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',
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -115,17 +126,11 @@ export default function NewProduct() {
     price: ''
   });
 
-  function _handleSubmit(event) {
-    if (!loading && !results && !error) {
-      dispatch(createProduct(product));
-    }
-    createProductAction();
-  }
-
   const createProductAction = () => {
     debugger
     if (results) {
       console.log(results);
+      dispatch(resetProductSearch());
       dispatch(resetCreateProduct());
       history.push("/mainpage");
     } else if (error) {
@@ -135,9 +140,28 @@ export default function NewProduct() {
         </Alert>
       );
     }
+    dispatch(resetProductSearch());
     dispatch(resetCreateProduct());
     history.push("/mainpage");
   };
+
+  function _handleUploadFile(event) {
+    console.log(event.target.files[0])
+
+    S3FileUpload
+      .uploadFile(event.target.files[0], config)
+      .then(data => {
+        _handleImgChange(data.location);
+      })
+      .catch(err => console.error(err))
+  }
+
+  function _handleSubmit(event) {
+    if (!loading && !results && !error) {
+      dispatch(createProduct(product));
+    }
+    createProductAction();
+  }
 
   function _handleNameChange(event) {
     setProduct({
@@ -149,10 +173,10 @@ export default function NewProduct() {
     console.log(product);
   }
 
-  function _handleImgChange(event) {
+  function _handleImgChange(url) {
     setProduct({
       name: product.name,
-      img: event.target.value,
+      img: url,
       description: product.description,
       price: product.price
     });
@@ -203,7 +227,7 @@ export default function NewProduct() {
                 className={classes.input}
                 id="contained-button-file"
                 multiple
-                onChange={(event) => { console.log(event.target.value); document.getElementById("ProductoImagen").src = event.target.value; }}
+                onChange={(e => _handleUploadFile(e))}
                 type="file"
               />
               <label htmlFor="contained-button-file">
@@ -224,20 +248,6 @@ export default function NewProduct() {
                 name="name"
                 autoFocus
                 onChange={(e) => _handleNameChange(e)}
-              />
-
-              <Divider className={classes.spacedHeight} />
-
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="img"
-                label="Link Imagen"
-                name="img"
-                autoFocus
-                onChange={(e) => _handleImgChange(e)}
               />
 
               <Divider className={classes.spacedHeight} />
@@ -302,9 +312,4 @@ export default function NewProduct() {
       </Grid>
     </React.Fragment>
   );
-}
-
-function CreatePostForm() {
-  const classes = useStyles();
-
 }
