@@ -14,6 +14,10 @@ import Fade from '@material-ui/core/Fade';
 import { Grid, Divider } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { createOrderDetail, resetCreateOrderDetail } from "../actions/createOrderDetail";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -78,8 +82,42 @@ export default function ImgMediaCard(props) {
     history
   } = props;
 
+  const { idOrden, usuario } = props;
+
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => _.get(state, "createOrderDetail.loading"));
+  const results = useSelector((state) => _.get(state, "createOrderDetail.results"));
+  const error = useSelector((state) => _.get(state, "createOrderDetail.error"));
+
+
   const [open, setOpen] = React.useState(false);
+
+  const renderPublicaciones = () => {
+    if (results) {
+      console.log(results);
+      dispatch(resetCreateOrderDetail());
+    } else if (error) {
+      return 
+    }
+    return ;
+  };
+
+  function _handleLogin(event) {
+
+    const obj = {
+      userEmail: usuario,
+      id: id,
+      idOrder: idOrden
+    }
+
+    if (!loading && !results && !error) {
+      dispatch(createOrderDetail(obj));
+    }
+
+    renderPublicaciones();
+  }
 
 
   const handleOpen = () => {
@@ -150,7 +188,7 @@ export default function ImgMediaCard(props) {
                   Texto por si le quieren añadir
             </Typography>
                 <Divider className={classes.divisor} />
-                <Button variant="outlined" size="large" className={classes.btnColorGreen}>
+                <Button variant="outlined" size="large" className={classes.btnColorGreen} onClick={() => _handleLogin()}>
                   COMPRAR
               </Button>
               </Grid>

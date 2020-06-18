@@ -16,6 +16,7 @@ import { searchProduct } from "../actions/searchProducts";
 import TextField from '@material-ui/core/TextField';
 import { getLocalStorage } from '../actions/localStorage';
 import { useHistory } from "react-router-dom";
+import { searchOrderByUser, resetSearchOrderByUser } from "../actions/searchOrderByUser";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -95,24 +96,38 @@ export default function MainPage() {
   const loading = useSelector((state) => _.get(state, "searchProducts.loading"));
   const results = useSelector((state) => _.get(state, "searchProducts.results"));
   const error = useSelector((state) => _.get(state, "searchProducts.error"));
+
+  const loadingOrder = useSelector((state) => _.get(state, "getOrderByUser.loading"));
+  const resultsOrder = useSelector((state) => _.get(state, "getOrderByUser.results"));
+  const errorOrder = useSelector((state) => _.get(state, "getOrderByUser.error"));
+
+
   const history = useHistory();
 
   useEffect(() => {
     //localStorage.removeItem('ponys-username');
     if (!getLocalStorage('ponys-username')) {
-
       history.push("/login");
     }
     if (!loading && !results && !error) {
       dispatch(searchProduct());
     }
+    if (!loadingOrder && !resultsOrder && !errorOrder) {
+      dispatch(searchOrderByUser(getLocalStorage('ponys-username').correo));
+    }
   });
 
   const renderPublicaciones = () => {
-    if (results && results.length >= 1) {
-      console.log(results);
+    if (results && results.length >= 1 && resultsOrder) {
+      var ubu = {};
+      if (resultsOrder.length == undefined) {
+        ubu.id = null;
+      } else{
+        ubu.id = resultsOrder[0].id
+      }
+      
       return (results.map((p) => (
-        <Publications Key={p.id} {...p} />
+        <Publications Key={p.id} {...p}  idOrden={ubu.id} usuario={getLocalStorage('ponys-username').correo}/>
       )));
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
