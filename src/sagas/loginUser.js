@@ -9,7 +9,7 @@ import {
   SEARCH_USER_BY_ID_COMPLETE
 
 } from '../constants/actionTypes';
-import apiCall from '../api';
+import apiCall from '../apiusers';
 
 function* loginUser(action) {
   console.log(action.payload);

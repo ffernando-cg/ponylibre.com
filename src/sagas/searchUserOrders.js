@@ -13,10 +13,10 @@ import apiCall from '../api';
 
 function* searchUserOrders(action) {
   const obj = action.payload;
-
   try {
 
     const result = yield call(apiCall, 'GET', `/v1/products/${obj.idProducto}`, null);
+    
 
     obj.imProduct = result.data.img;
     obj.imName = result.data.name;
@@ -32,7 +32,7 @@ function* searchUserOrders(action) {
 
     yield put({
       type: SEARCH_USER_ORDERS_COMPLETE,
-      payload: obj.data
+      payload: obj
     });
   } catch (e) {
     yield put({

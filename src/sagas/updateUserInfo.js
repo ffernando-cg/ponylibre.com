@@ -9,7 +9,7 @@ import {
   UPDATE_USER_INFO_COMPLETE,
 
 } from '../constants/actionTypes';
-import apiCall from '../api';
+import apiCall from '../apiusers';
 
 function* updateUserInfo(action) {
   console.log(action.payload);
