@@ -12,17 +12,21 @@ import {
 import apiCall from '../api';
 
 function* searchUserOrders(action) {
-  const obj = action.payload;
+  const orderId = action.payload;
 
   try {
 
-    const result = yield call(apiCall, 'GET', `/v1/products/${obj.idProducto}`, null);
+    const result = yield call(apiCall, 'GET', `/v1/orders/${orderId}`, null);
+    console.log(result);
 
-    obj.imProduct = result.data.img;
-    obj.imName = result.data.name;
+    result.data.detalle.forEach(p => {
+      const product = call(apiCall, 'GET', `/v1/products/${result.data.detalle.idProducto}`, null);
+      console.log(product.data)
+      p.imProduct = product.data.img;
+      p.imName = product.data.name;
+    });
 
-
-    console.log(obj);
+    console.log(result);
 
 
 
@@ -32,7 +36,7 @@ function* searchUserOrders(action) {
 
     yield put({
       type: SEARCH_USER_ORDERS_COMPLETE,
-      payload: obj.data
+      payload: result.data
     });
   } catch (e) {
     yield put({
@@ -42,6 +46,4 @@ function* searchUserOrders(action) {
   }
 }
 
-export default function* () {
-  yield takeLatest(SEARCH_USER_ORDERS_START, searchUserOrders);
-}
+export default function* () { }

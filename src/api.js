@@ -6,14 +6,12 @@ export default (
   method,
   path,
   data,
-  queryParams = {},
+  params = {},
   headers = {}
 ) => axios({
   method,
   url: `${baseUrl}${path}`,
   data,
-  params: {
-    ...queryParams
-  },
+  params,
   headers
 });

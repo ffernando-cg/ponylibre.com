@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    color:'#000000'
+    color: '#000000'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     backgroundColor: '#30B2BA',
-    color:'#ffffff'
+    color: '#ffffff'
   },
   whiteCol: {
     color: '#000000',
@@ -67,8 +67,8 @@ export default function SignUp() {
     if (results) {
       console.log(results);
       if (
-        results.correo == credentials.userEmail &&
-        results.password == credentials.userPassword
+        results.correo === credentials.userEmail &&
+        results.password === credentials.userPassword
       ) {
         dispatch(resetProductSearch());
         setLocalStorage(results, "ponys-username");
@@ -86,12 +86,11 @@ export default function SignUp() {
       );
     }
     return <Alert severity="error">
-        Oops, something terrible has happened! :(
+      Oops, something terrible has happened! :(
       </Alert>;
   };
 
   function _handleLogin(event) {
-  debugger
 
     if (credentials.userEmail && credentials.userPassword && !loading && !results && !error) {
       dispatch(createUser(credentials));
@@ -152,7 +151,7 @@ export default function SignUp() {
                 onChange={(e) => _handlePasswordChange(e)}
               />
             </Grid>
-            
+
           </Grid>
           <Button
             fullWidth

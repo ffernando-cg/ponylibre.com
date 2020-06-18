@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,7 +7,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import OrderedProducts from './OrderedProducts';
-
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { searchOrderByUser } from "../actions/searchOrderByUser";
+import { getLocalStorage } from '../actions/localStorage';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -31,18 +36,18 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1.5),
     color: "#496442",
 
-    "&:hover":{
+    "&:hover": {
       background: "#496442",
-      color:"#FFFFFF",
+      color: "#FFFFFF",
     }
   },
-  linkSecondary:{
+  linkSecondary: {
     margin: theme.spacing(1, 1.5),
     color: "#000000",
 
-    "&:hover":{
+    "&:hover": {
       background: "#FFFFF",
-      color:"#FFFFFF",
+      color: "#FFFFFF",
     }
   },
   heroContent: {
@@ -81,6 +86,35 @@ const useStyles = makeStyles((theme) => ({
 export default function MainPage() {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
+  const loading = useSelector((state) => _.get(state, "getOrderByUser.loading"));
+  const results = useSelector((state) => _.get(state, "getOrderByUser.results"));
+  const error = useSelector((state) => _.get(state, "getOrderByUser.error"));
+
+  useEffect(() => {
+    if (getLocalStorage('ponys-username')) {
+      if (!loading && !results && !error) {
+        dispatch(searchOrderByUser(getLocalStorage('ponys-username').correo));
+      }
+    }
+  });
+
+  const renderPublicaciones = () => {
+    if (results && results.length >= 1) {
+      return (<OrderedProducts order={results[0]} />);
+    } else if (loading) {
+      return <CircularProgress size={90} color="primary" />;
+    } else if (error) {
+      return (
+        <Alert severity="error">
+          Oops, something terrible has happened! :(
+        </Alert>
+      );
+    }
+    return <div>Programador de Mierda</div>
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -89,10 +123,10 @@ export default function MainPage() {
           <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
             PonyLibre
           </Typography>
-          
+
           <nav>
-          <Button href="mainpage" color="inherit" variant="outlined" className={classes.link}>
-            Regresar
+            <Button href="mainpage" color="inherit" variant="outlined" className={classes.link}>
+              Regresar
           </Button>
           </nav>
         </Toolbar>
@@ -100,8 +134,8 @@ export default function MainPage() {
       <Grid container className={classes.grid}>
         <Grid item md={2} />
         <Grid item md={8} sm={12}>
-          <OrderedProducts />
-          </Grid>
+          {renderPublicaciones()}
+        </Grid>
         <Grid item md={2} />
       </Grid>
     </React.Fragment>

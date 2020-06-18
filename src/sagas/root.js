@@ -4,7 +4,9 @@ import searchMovieById from './searchMovieById';
 import searchUserOrders from './searchUserOrders';
 import loginUser from './loginUser';
 import creaetUser from './createUser'
-
+import getOrderByUser from './getOrderByUser'
+import updateUserInfo from './updateUserInfo'
+import createProduct from './createProduct'
 
 export default function* () {
   yield all([
@@ -12,6 +14,9 @@ export default function* () {
     searchMovieById(),
     searchUserOrders(),
     loginUser(),
-    creaetUser()
+    creaetUser(),
+    getOrderByUser(),
+    updateUserInfo(),
+    createProduct()
   ]);
 }

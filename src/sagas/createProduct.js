@@ -4,38 +4,40 @@ import {
   takeLatest
 } from 'redux-saga/effects';
 import {
-  CREATE_USER_START,
-  CREATE_USER_ERROR,
-  CREATE_USER_COMPLETE
+  CREATE_PRODUCT_START,
+  CREATE_PRODUCT_ERROR,
+  CREATE_PRODUCT_COMPLETE,
 
 } from '../constants/actionTypes';
 import apiCall from '../api';
 
-function* loginUser(action) {
+function* createProduct(action) {
   console.log(action.payload);
   var ovejota = {
-    correo: action.payload.userEmail,
-    password: action.payload.userPassword
+    name: action.payload.userEmail,
+    img: action.payload.userPassword,
+    description: '',
+    price: ''
   }
   try {
-    const result = yield call(apiCall, 'POST', `/v1/users`, ovejota);
+    const result = yield call(apiCall, 'POST', `/v1/products`, ovejota);
     console.log(result);
 
     if (result.data.Error) {
       throw new Error(result.data.Error);
     }
     yield put({
-      type: CREATE_USER_COMPLETE,
+      type: CREATE_PRODUCT_COMPLETE,
       payload: result.data
     });
   } catch (e) {
     yield put({
-      type: CREATE_USER_ERROR,
+      type: CREATE_PRODUCT_ERROR,
       payload: e
     });
   }
 }
 
 export default function* () {
-  yield takeLatest(CREATE_USER_START, loginUser);
+  yield takeLatest(CREATE_PRODUCT_START, createProduct);
 }

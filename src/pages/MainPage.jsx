@@ -96,9 +96,11 @@ export default function MainPage() {
   const results = useSelector((state) => _.get(state, "searchProducts.results"));
   const error = useSelector((state) => _.get(state, "searchProducts.error"));
   const history = useHistory();
-  
+
   useEffect(() => {
+    //localStorage.removeItem('ponys-username');
     if (!getLocalStorage('ponys-username')) {
+
       history.push("/login");
     }
     if (!loading && !results && !error) {

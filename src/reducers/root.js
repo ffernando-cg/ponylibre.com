@@ -4,13 +4,20 @@ import product from './product';
 import login from './loginUser';
 import searchOrders from './searchUserOrders'
 import createUser from './createUser'
+import getOrderByUser from './getOrderByUser'
+import updateUserInfo from './updateUserInfo'
+import createProduct from './createProduct'
+
 
 const rootReducer = combineReducers({
   searchProducts,
   searchOrders,
   product,
   login,
-  createUser
+  createUser,
+  getOrderByUser,
+  updateUserInfo,
+  createProduct
 });
 
 export default rootReducer;

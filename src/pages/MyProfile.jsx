@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,8 +14,10 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
 import Divider from "@material-ui/core/Divider";
-import {getLocalStorage } from "../actions/localStorage";
+import { getLocalStorage, setLocalStorage } from "../actions/localStorage";
 import { useHistory } from "react-router-dom";
+import { startUpdateUserInfo } from "../actions/updateUserInfo";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -98,12 +102,16 @@ const useStyles = makeStyles((theme) => ({
 export default function NewProduct() {
   const classes = useStyles();
   const history = useHistory();
-
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => _.get(state, "updateUserInfo.loading"));
+  const results = useSelector((state) => _.get(state, "updateUserInfo.results"));
+  const error = useSelector((state) => _.get(state, "updateUserInfo.error"));
   const [credentials, setCredentials] = useState({
+    userActualEmail: getLocalStorage('ponys-username').correo,
     userEmail: getLocalStorage('ponys-username').correo,
     userPassword: getLocalStorage('ponys-username').password,
   });
-  
+
   useEffect(() => {
     if (!getLocalStorage('ponys-username')) {
       history.push("/login");
@@ -112,21 +120,59 @@ export default function NewProduct() {
 
   function _handleEmailChange(event) {
     setCredentials({
+      userActualEmail: getLocalStorage('ponys-username').correo,
       userEmail: event.target.value,
       userPassword: credentials.userPassword,
     });
+    console.log(credentials);
   }
 
   function _handlePasswordChange(event) {
     setCredentials({
+      userActualEmail: getLocalStorage('ponys-username').correo,
       userEmail: credentials.userEmail,
       userPassword: event.target.value,
     });
+    console.log(credentials);
   }
 
-  function handleChange(event) {
-    console.log(event.target.files[0]);
+  // function handleChange(event) {
+  //   console.log(event.target.files[0]);
+  // }
+
+  function _handleUpdate(event) {
+    debugger
+    if (credentials.userEmail && credentials.userPassword && !loading && !results && !error) {
+      dispatch(startUpdateUserInfo(credentials));
+    }
+    renderPublicaciones();
   }
+
+  const renderPublicaciones = () => {
+    if (results) {
+      console.log(results);
+      if (
+        results.correo === credentials.userEmail &&
+        results.password === credentials.userPassword
+      ) {
+        setLocalStorage(results, "ponys-username");
+        history.push("/mainpage");
+      } else {
+        return (
+          <Alert severity="error">Usuario o Contraseña Incorrectos :(</Alert>
+        );
+      }
+    } else if (error) {
+      return (
+        <Alert severity="error">
+          Oops, something terrible has happened! :(
+        </Alert>
+      );
+    }
+    return <Alert severity="error">
+      Oops, something terrible has happened! :(
+      </Alert>;
+  };
 
   return (
     <React.Fragment>
@@ -210,7 +256,7 @@ export default function NewProduct() {
                 accept="image/*"
                 className={classes.input}
                 id="contained-button-file"
-                onChange={handleChange} //FALTA ALTERNAR ESTO PARA PODER IMPLEMENTAR EL CAMBIO DE LA IMAGEN
+                onChange={() => _handleUpdate()} //FALTA ALTERNAR ESTO PARA PODER IMPLEMENTAR EL CAMBIO DE LA IMAGEN
                 multiple
                 type="file"
               />
@@ -223,6 +269,7 @@ export default function NewProduct() {
                 className={classes.buttonAccept}
                 fullWidth
                 size="large"
+                onClick={() => _handleUpdate()}
               >
                 Guardar
               </Button>

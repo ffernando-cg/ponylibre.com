@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ImgMediaCard(props) {
   const {
+    id,
     img,
     name,
     price,

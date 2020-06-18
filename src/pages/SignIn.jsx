@@ -90,8 +90,8 @@ export default function SignInSide(props) {
     if (results) {
       console.log(results);
       if (
-        results.correo == credentials.userEmail &&
-        results.password == credentials.userPassword
+        results.correo === credentials.userEmail &&
+        results.password === credentials.userPassword
       ) {
         dispatch(resetProductSearch());
         setLocalStorage(results, "ponys-username");
@@ -109,7 +109,7 @@ export default function SignInSide(props) {
       );
     }
     return <Alert severity="error">
-        Oops, something terrible has happened! :(
+      Oops, something terrible has happened! :(
       </Alert>;
   };
 
