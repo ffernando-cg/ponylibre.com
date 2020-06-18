@@ -14,10 +14,10 @@ import apiCall from '../api';
 function* createProduct(action) {
   console.log(action.payload);
   var ovejota = {
-    name: action.payload.userEmail,
-    img: action.payload.userPassword,
-    description: '',
-    price: ''
+    name: action.payload.name,
+    img: action.payload.img,
+    description: action.payload.description,
+    price: action.payload.price
   }
   try {
     const result = yield call(apiCall, 'POST', `/v1/products`, ovejota);

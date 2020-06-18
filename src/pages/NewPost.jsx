@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import _ from "lodash";
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +15,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import FilledInput from '@material-ui/core/FilledInput';
+import Alert from "@material-ui/lab/Alert";
+import { createProduct, resetCreateProduct } from "../actions/createProduct";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1.5),
     color: "#666666",
 
-    "&:hover":{
+    "&:hover": {
       background: "#404040",
-      color:"#FFFFFF",
+      color: "#FFFFFF",
     }
   },
   heroContent: {
@@ -64,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   spacedwidth: {
     marginLeft: theme.spacing(4),
   },
-  rootInside:{
+  rootInside: {
     maxWidth: "75vh",
     marginTop: 25,
     marginRight: "35vh"
@@ -72,27 +81,100 @@ const useStyles = makeStyles((theme) => ({
   input: {
     display: 'none',
   },
-  spacedHeight:{
-    marginTop: theme.spacing(3),  
+  spacedHeight: {
+    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
   },
-  spacedHeightBlank:{
+  spacedHeightBlank: {
     marginTop: "5vh"
   },
   buttonAccept: {
     background: "#008000",
-    color:"#FFFFFF",
+    color: "#FFFFFF",
 
-    "&:hover":{
-      background:"#496442",
-      color:"#FFFFFF"
+    "&:hover": {
+      background: "#496442",
+      color: "#FFFFFF"
     },
-},
+  },
 }));
 
 export default function NewProduct() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const loading = useSelector((state) => _.get(state, "createProduct.loading"));
+  const results = useSelector((state) => _.get(state, "createProduct.results"));
+  const error = useSelector((state) => _.get(state, "createProduct.error"));
 
+
+  const [product, setProduct] = useState({
+    name: '',
+    img: 'https://pluspng.com/img-png/my-little-pony-png-download-my-little-pony-png-images-transparent-gallery-advertisement-1834.png',
+    description: '',
+    price: ''
+  });
+
+  function _handleSubmit(event) {
+    if (!loading && !results && !error) {
+      dispatch(createProduct(product));
+    }
+    createProductAction();
+  }
+
+  const createProductAction = () => {
+    debugger
+    if (results) {
+      console.log(results);
+      dispatch(resetCreateProduct());
+      history.push("/mainpage");
+    } else if (error) {
+      return (
+        <Alert severity="error">
+          Oops, something terrible has happened! :(
+        </Alert>
+      );
+    }
+    dispatch(resetCreateProduct());
+    history.push("/mainpage");
+  };
+
+  function _handleNameChange(event) {
+    setProduct({
+      name: event.target.value,
+      img: product.img,
+      description: product.description,
+      price: product.price
+    });
+    console.log(product);
+  }
+
+  function _handleImgChange(event) {
+    setProduct({
+      name: product.name,
+      img: event.target.value,
+      description: product.description,
+      price: product.price
+    });
+  }
+
+  function _handleDescriptionChange(event) {
+    setProduct({
+      name: product.name,
+      img: product.img,
+      description: event.target.value,
+      price: product.price
+    });
+  }
+
+  function _handlePriceChange(event) {
+    setProduct({
+      name: product.name,
+      img: product.img,
+      description: product.description,
+      price: event.target.value,
+    });
+  }
 
   return (
     <React.Fragment>
@@ -102,99 +184,127 @@ export default function NewProduct() {
           <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
             PonyLibre
           </Typography>
-          
+
           <nav>
-          <Button href="mainpage" color="inherit" variant="outlined" className={classes.link}>
-            Cancelar y regresar
+            <Button href="mainpage" color="inherit" variant="outlined" className={classes.link}>
+              Cancelar y regresar
           </Button>
           </nav>
         </Toolbar>
       </AppBar>
       <Grid container >
-      <div className={classes.root}>
-      <Grid container spacing={2}>
-        <div className={classes.spacedHeight} />
-          <Grid item md={4}>
-          <div className={classes.spacedHeightBlank} />
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="contained-button-file"
-            multiple
-            onChange={(event) => {console.log(event.target.value); document.getElementById("ProductoImagen").src= event.target.value;  }}
-            type="file"
-          />
-          <label htmlFor="contained-button-file">
-            <Button variant="contained" color="primary" component="span" fullWidth>
-              Subir imagen
+        <div className={classes.root}>
+          <Grid container spacing={2}>
+            <div className={classes.spacedHeight} />
+            <Grid item md={4}>
+              <div className={classes.spacedHeightBlank} />
+              <input
+                accept="image/*"
+                className={classes.input}
+                id="contained-button-file"
+                multiple
+                onChange={(event) => { console.log(event.target.value); document.getElementById("ProductoImagen").src = event.target.value; }}
+                type="file"
+              />
+              <label htmlFor="contained-button-file">
+                <Button variant="contained" color="primary" component="span" fullWidth>
+                  Subir imagen
             </Button>
-          </label>
-
-            <Divider className={classes.spacedHeight} />
-
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Nombre del producto"
-              name="name"
-              autoFocus
-            />
+              </label>
 
               <Divider className={classes.spacedHeight} />
 
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              multiline
-              rows={4}
-              id="description"
-              label="Descripcion del producto"
-              name="description"
-            />
-
-            <Divider className={classes.spacedHeight} />
-            <Button variant="contained" color="inherit" className={classes.buttonAccept} fullWidth size="large">
-              Guardar y publicar
-            </Button>
-          </Grid>
-
-          <Grid item sm={0} md={1}></Grid>
-          <Grid item md={7}>
-          <Card className={classes.rootInside}>
-            <CardActionArea>
-              <CardMedia
-                className={classes.image}
-                component="img"
-                alt="Producto"
-                id="ProductoImagen"
-                image="https://pluspng.com/img-png/my-little-pony-png-download-my-little-pony-png-images-transparent-gallery-advertisement-1834.png"
-                title="PonyProducto"
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Nombre del producto"
+                name="name"
+                autoFocus
+                onChange={(e) => _handleNameChange(e)}
               />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2" >
-                  Perfume pony
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  500 ponydolars
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-            
+
+              <Divider className={classes.spacedHeight} />
+
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="img"
+                label="Link Imagen"
+                name="img"
+                autoFocus
+                onChange={(e) => _handleImgChange(e)}
+              />
+
+              <Divider className={classes.spacedHeight} />
+
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                multiline
+                rows={4}
+                id="description"
+                label="Descripcion del producto"
+                name="description"
+                onChange={(e) => _handleDescriptionChange(e)}
+              />
+
+              <Divider className={classes.spacedHeight} />
+
+              <FormControl fullWidth className={classes.margin} variant="filled">
+                <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
+                <FilledInput
+                  id="filled-adornment-amount"
+                  value={product.price}
+                  onChange={(e) => _handlePriceChange(e)}
+                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                />
+              </FormControl>
+
+              <Divider className={classes.spacedHeight} />
+              <Button variant="contained" color="inherit" className={classes.buttonAccept} fullWidth size="large" onClick={() => _handleSubmit()}>
+                Guardar y publicar
+            </Button>
+            </Grid>
+
+            <Grid item sm={0} md={1}></Grid>
+            <Grid item md={7}>
+              <Card className={classes.rootInside}>
+                <CardActionArea>
+                  <CardMedia
+                    className={classes.image}
+                    component="img"
+                    alt="Producto"
+                    id="ProductoImagen"
+                    image={product.img}
+                    title="PonyProducto"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2" >
+                      {product.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      {product.description}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+
+            </Grid>
           </Grid>
-      </Grid>
-    </div>
+        </div>
       </Grid>
     </React.Fragment>
   );
 }
 
-function CreatePostForm(){
+function CreatePostForm() {
   const classes = useStyles();
 
 }

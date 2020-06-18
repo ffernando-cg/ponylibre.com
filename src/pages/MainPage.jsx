@@ -169,10 +169,15 @@ export default function MainPage() {
             >
               Mis ordenes
             </Button>
-            <TextField
-              className={classes.textFieldSearch}
-              placeholder="Buscar producto"
-            />
+            <label className={classes.spacedwidth} />
+            <Button
+              color="inherit"
+              href="login"
+              onClick={() => { localStorage.removeItem('ponys-username'); }}
+              className={classes.linkSecondary}
+            >
+              Salir
+            </Button>
           </nav>
         </Toolbar>
       </AppBar>
