@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
+  imageTitle: {
+    height: 50
+  },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
@@ -101,8 +104,12 @@ export default function MainPage() {
   });
 
   const renderPublicaciones = () => {
-    if (results && results.length >= 1) {
-      return (<OrderedProducts order={results[0]} />);
+
+    if (results) {
+      if (results.id !== undefined) {
+        console.log(results)
+        return (<OrderedProducts order={results} />);
+      }
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
     } else if (error) {
@@ -112,7 +119,9 @@ export default function MainPage() {
         </Alert>
       );
     }
-    return <div>Programador de Mierda</div>
+    return (<Alert severity="error">
+      No tienes órdenes
+    </Alert>)
   };
 
   return (
@@ -120,8 +129,13 @@ export default function MainPage() {
       <CssBaseline />
       <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-            PonyLibre
+          <img src='https://ponylibre.s3-us-west-1.amazonaws.com/ponylibre.com+logo.png' className={classes.imageTitle}></img>
+          <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.toolbarTitle}
+          >
           </Typography>
 
           <nav>

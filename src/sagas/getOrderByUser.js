@@ -12,6 +12,7 @@ import apiCall from '../api';
 
 function* searchOrderByUser(action) {
   try {
+    debugger
     const result = yield call(apiCall, 'GET', '/v1/orders', null);
     var ovejota = [];
 
@@ -23,8 +24,8 @@ function* searchOrderByUser(action) {
 
     var unbuyedOrder = {};
     ovejota.forEach(s => {
-      if (!ovejota.isBuyed) {
-        unbuyedOrder = ovejota;
+      if (s.isBuyed == false) {
+        unbuyedOrder = s;
       }
     });
 

@@ -34,7 +34,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#87DCC0",
   },
   toolbarTitle: {
-    flexGrow: 1,
+    flexGrow: 1
+  },
+  imageTitle: {
+    height: 50
   },
   link: {
     margin: theme.spacing(1, 1.5),
@@ -120,14 +123,14 @@ export default function MainPage() {
   const renderPublicaciones = () => {
     if (results && results.length >= 1 && resultsOrder) {
       var ubu = {};
-      if (resultsOrder.length == undefined) {
+      if (resultsOrder.id == undefined) {
         ubu.id = null;
-      } else{
-        ubu.id = resultsOrder[0].id
+      } else {
+        ubu.id = resultsOrder.id
       }
-      
+
       return (results.map((p) => (
-        <Publications Key={p.id} {...p}  idOrden={ubu.id} usuario={getLocalStorage('ponys-username').correo}/>
+        <Publications Key={p.id} {...p} idOrden={ubu.id} usuario={getLocalStorage('ponys-username').correo} />
       )));
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
@@ -138,7 +141,7 @@ export default function MainPage() {
         </Alert>
       );
     }
-    return <div>Programador de Mierda</div>
+    return <CircularProgress size={90} color="primary" />;
   };
 
   return (
@@ -151,13 +154,13 @@ export default function MainPage() {
         className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
+          <img src='https://ponylibre.s3-us-west-1.amazonaws.com/ponylibre.com+logo.png' className={classes.imageTitle}></img>
           <Typography
             variant="h6"
             color="inherit"
             noWrap
             className={classes.toolbarTitle}
           >
-            PonyLibre
           </Typography>
 
           <nav>
@@ -181,6 +184,7 @@ export default function MainPage() {
               color="inherit"
               href="myorders"
               className={classes.linkSecondary}
+              onClick={() => { dispatch(resetSearchOrderByUser()) }}
             >
               Mis ordenes
             </Button>

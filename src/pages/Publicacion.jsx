@@ -17,6 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import { createOrderDetail, resetCreateOrderDetail } from "../actions/createOrderDetail";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,10 +79,10 @@ export default function ImgMediaCard(props) {
     img,
     name,
     price,
-    description,
-    history
+    description
   } = props;
 
+  const history = useHistory();
   const { idOrden, usuario } = props;
 
   const classes = useStyles();
@@ -98,10 +99,10 @@ export default function ImgMediaCard(props) {
     if (results) {
       console.log(results);
       dispatch(resetCreateOrderDetail());
+      history.push("/myorders");
     } else if (error) {
-      return 
+      return
     }
-    return ;
   };
 
   function _handleLogin(event) {

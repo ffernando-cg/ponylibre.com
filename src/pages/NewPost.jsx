@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
   },
+  imageTitle: {
+    height: 50
+  },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
@@ -127,7 +130,7 @@ export default function NewProduct() {
   });
 
   const createProductAction = () => {
-    debugger
+
     if (results) {
       console.log(results);
       dispatch(resetProductSearch());
@@ -205,8 +208,13 @@ export default function NewProduct() {
       <CssBaseline />
       <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-            PonyLibre
+          <img src='https://ponylibre.s3-us-west-1.amazonaws.com/ponylibre.com+logo.png' className={classes.imageTitle}></img>
+          <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.toolbarTitle}
+          >
           </Typography>
 
           <nav>

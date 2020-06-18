@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import _ from "lodash";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +13,8 @@ import Paper from '@material-ui/core/Paper';
 import { Button } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import OrdererRow from './OrdererRow'
+
+import { updateUserOrder } from "../actions/updateUserOrder";
 
 const TAX_RATE = 0.16;
 
@@ -41,7 +46,33 @@ export default function SpanningTable(props) {
   const classes = useStyles();
   const [order, setOrder] = useState(props.order);
 
+  const dispatch = useDispatch();
 
+  const loading = useSelector((state) => _.get(state, "updateUserOrder.loading"));
+  const results = useSelector((state) => _.get(state, "updateUserOrder.results"));
+  const error = useSelector((state) => _.get(state, "updateUserOrder.error"));
+  const history = useHistory();
+
+
+  const renderPublicaciones = () => {
+    if (results) {
+      console.log(results);
+      history.push("/mainpage");
+    } else if (error) {
+      return
+    }
+    history.push("/mainpage");
+    return
+  };
+
+  function _handleLogin(event) {
+
+    if (!loading && !results && !error) {
+      dispatch(updateUserOrder(props.order.id));
+    }
+
+    renderPublicaciones();
+  }
 
   function ccyFormat(num) {
     return `${num.toFixed(2)}`;
@@ -53,6 +84,7 @@ export default function SpanningTable(props) {
   const renderRowsOrder = () => {
     console.log(order.detalle)
     return (order.detalle.map((p, index) => (
+
       <OrdererRow Key={index} id={index} detalle={p} />
     )));
   }
@@ -67,7 +99,6 @@ export default function SpanningTable(props) {
             <TableCell align="right">Cantidad</TableCell>
             <TableCell align="right">Precio unitario</TableCell>
             <TableCell align="right">Total por este producto</TableCell>
-            <TableCell align="right">Eliminar</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -91,7 +122,7 @@ export default function SpanningTable(props) {
           </TableRow>
           <TableRow>
             <TableCell colSpan={3} align="right">
-              <Button variant="outlined" size="large" className={classes.btnColorGreen}>
+              <Button variant="outlined" size="large" className={classes.btnColorGreen} onClick={() => _handleLogin()}>
                 <CheckCircleOutlineIcon />
               </Button>
             </TableCell>

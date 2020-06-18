@@ -47,58 +47,64 @@ export default function SpanningTable(props) {
   const loading = useSelector((state) => _.get(state, "searchOrders.loading"));
   const results = useSelector((state) => _.get(state, "searchOrders.results"));
   const error = useSelector((state) => _.get(state, "searchOrders.error"));
+
+  console.log(props.detalle);
+
   var validacion = null;
   useEffect(() => {
-
-  if (!loading && !results && !error && !validacion) {
-        dispatch(searchUserOrders(props.detalle));
+    if (results && validacion == null) {
+      dispatch(resetSearchUserOrders());
+    }
+    if (!loading && !results && !error && !validacion) {
+      dispatch(searchUserOrders(props.detalle));
+      validacion = 'dfjdsfdfkhdfkjdhfkshdfkj';
     }
   });
-
 
   function ccyFormat(num) {
     return `${num.toFixed(2)}`;
   }
   const resetearFuncion = () => {
     if (results) {
-    validacion = true;
-    dispatch(resetSearchUserOrders());
+      validacion = true;
+      dispatch(resetSearchUserOrders());
     }
   }
 
   const renderPublicaciones = () => {
-   
     if (results) {
-      
-      return (
-        <TableRow key={props}>
-          <TableCell>
-            <img src={results.imProduct} className={classes.imgWidth}/>
-          </TableCell>
-          <TableCell align="center">{results.imName}</TableCell>
-          <TableCell align="right">{results.precioCompra}</TableCell>
-          <TableCell align="right">{results.cantidad}</TableCell>
-          <TableCell align="right">{ccyFormat(results.subtotal)}</TableCell>
-          <TableCell align="right">
-            <Button variant="outlined" color="inherit" className={classes.btnDelete} size="small"> {//------------ BOTON PARA QUITAR UN PRODUCTO DE UNA FILA POR LA LLAVE QUE SE DECLARA ARRIBA
-            }<DeleteOutlinedIcon fontSize="small" />
-            </Button>
-          </TableCell>
-        </TableRow>
-      );
-      resetearFuncion();
+      validacion = true;
+      if (results.idProducto === props.detalle.idProducto) {
+        const aux = results;
+
+        return (
+          <TableRow key={props}>
+            <TableCell>
+              <img src={aux.imProduct} className={classes.imgWidth} />
+            </TableCell>
+            <TableCell align="center">{aux.imName}</TableCell>
+            <TableCell align="right">{aux.precioCompra}</TableCell>
+            <TableCell align="right">{aux.cantidad}</TableCell>
+            <TableCell align="right">{ccyFormat(aux.subtotal)}</TableCell>
+          </TableRow>
+        );
+
+      } else if (error) {
+        return (
+          <Alert severity="error">
+            Oops, something terrible has happened! :(
+          </Alert>
+        );
+
+      }
     } else if (loading) {
       return <CircularProgress size={90} color="primary" />;
-    } else if (error) {
-      return (
-        <Alert severity="error">
-          Oops, something terrible has happened! :(
-        </Alert>
-      );
     }
+
+
+
     return <CircularProgress size={90} color="primary" />
   };
 
-  
   return renderPublicaciones();
 }

@@ -8,7 +8,7 @@ import getOrderByUser from './getOrderByUser'
 import updateUserInfo from './updateUserInfo'
 import createProduct from './createProduct'
 import createOrderDetail from './createOrderDetail'
-
+import updateUserOrder from './updateUserOrder'
 
 const rootReducer = combineReducers({
   searchProducts,
@@ -18,6 +18,7 @@ const rootReducer = combineReducers({
   createUser,
   getOrderByUser,
   updateUserInfo,
+  updateUserOrder,
   createProduct,
   createOrderDetail
 });

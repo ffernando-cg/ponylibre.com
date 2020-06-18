@@ -66,6 +66,9 @@ export default function SignUp() {
   const renderPublicaciones = () => {
     if (results) {
       console.log(results);
+      dispatch(resetProductSearch());
+      setLocalStorage(results, "ponys-username");
+      history.push("/mainpage");
       if (
         results.correo === credentials.userEmail &&
         results.password === credentials.userPassword
@@ -78,6 +81,7 @@ export default function SignUp() {
           <Alert severity="error">Usuario o Contraseña Incorrectos :(</Alert>
         );
       }
+
     } else if (error) {
       return (
         <Alert severity="error">
@@ -85,9 +89,7 @@ export default function SignUp() {
         </Alert>
       );
     }
-    return <Alert severity="error">
-      Oops, something terrible has happened! :(
-      </Alert>;
+    history.push("/login");
   };
 
   function _handleLogin(event) {

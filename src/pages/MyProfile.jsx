@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: "flex",
   },
+  imageTitle: {
+    height: 50
+  },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
@@ -141,7 +144,7 @@ export default function NewProduct() {
   // }
 
   function _handleUpdate(event) {
-    debugger
+
     if (credentials.userEmail && credentials.userPassword && !loading && !results && !error) {
       dispatch(startUpdateUserInfo(credentials));
     }
@@ -184,13 +187,13 @@ export default function NewProduct() {
         className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
+          <img src='https://ponylibre.s3-us-west-1.amazonaws.com/ponylibre.com+logo.png' className={classes.imageTitle}></img>
           <Typography
             variant="h6"
             color="inherit"
             noWrap
             className={classes.toolbarTitle}
           >
-            PonyLibre
           </Typography>
 
           <nav>

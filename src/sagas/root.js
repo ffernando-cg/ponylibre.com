@@ -8,6 +8,7 @@ import getOrderByUser from './getOrderByUser'
 import updateUserInfo from './updateUserInfo'
 import createProduct from './createProduct'
 import createOrderDetail from './createOrderDetail'
+import updateUserOrder from './updateUserOrder'
 
 export default function* () {
   yield all([
@@ -18,6 +19,7 @@ export default function* () {
     creaetUser(),
     getOrderByUser(),
     updateUserInfo(),
+    updateUserOrder(),
     createProduct(),
     createOrderDetail()
   ]);
